@@ -14,7 +14,10 @@ public class BulletControlSystem implements IEntityProcessingService, BulletSPI 
     public void process(GameData gameData, World world) {
 
         for (Entity bullet : world.getEntities(Bullet.class)) {
-
+            double changeX = Math.cos(Math.toRadians(bullet.getRotation()));
+            double changeY = Math.sin(Math.toRadians(bullet.getRotation()));
+            bullet.setX(bullet.getX() + changeX * 3);
+            bullet.setY(bullet.getY() + changeY * 3);
         }
     }
 
@@ -24,14 +27,12 @@ public class BulletControlSystem implements IEntityProcessingService, BulletSPI 
         Bullet bullet = new Bullet();
 
 
+        //sets the bullet based on player.
         bullet.setPolygonCoordinates(0,0,0,1,5,1,5,0);
         double changeX = Math.cos(Math.toRadians(shooter.getRotation()));
         double changeY = Math.sin(Math.toRadians(shooter.getRotation()));
-
-        bullet.setX(shooter.getX());
-        bullet.setY(shooter.getY());
-        bullet.setX(shooter.getX() + changeX * 10);
-        bullet.setY(shooter.getY() + changeY * 10);
+        bullet.setX(shooter.getX() + changeX * 8);
+        bullet.setY(shooter.getY() + changeY * 8);
         bullet.setRotation(shooter.getRotation());
 
         return bullet;
