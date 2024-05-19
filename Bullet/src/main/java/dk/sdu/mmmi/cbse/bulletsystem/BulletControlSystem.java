@@ -31,8 +31,10 @@ public class BulletControlSystem implements IEntityProcessingService, BulletSPI 
         //sets the bullet based on player.
         //Shaping the bullet.
         bullet.setPolygonCoordinates(0,0,10,0,10,2,0,2);
-        bullet.setX(shooter.getX());
-        bullet.setY(shooter.getY());
+        double changeX = Math.cos(Math.toRadians(shooter.getRotation()));
+        double changeY = Math.sin(Math.toRadians(shooter.getRotation()));
+        bullet.setX(shooter.getX() + changeX * 10);
+        bullet.setY(shooter.getY() + changeY * 10);
         bullet.setRotation(shooter.getRotation());
 
 
@@ -40,7 +42,5 @@ public class BulletControlSystem implements IEntityProcessingService, BulletSPI 
         return bullet;
     }
 
-    private void setShape(Entity entity) {
-    }
 
 }

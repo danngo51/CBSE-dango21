@@ -5,6 +5,8 @@ import dk.sdu.mmmi.cbse.common.data.GameData;
 import dk.sdu.mmmi.cbse.common.data.World;
 import dk.sdu.mmmi.cbse.common.services.IGamePluginService;
 
+import java.lang.reflect.GenericArrayType;
+
 public class EnemyPlugin implements IGamePluginService {
 
     private Entity enemy;
@@ -26,6 +28,7 @@ public class EnemyPlugin implements IGamePluginService {
         enemyShip.setPolygonCoordinates(-5,-5,10,0,-5,5);
         enemyShip.setX(gameData.getDisplayHeight()-50);
         enemyShip.setY(gameData.getDisplayWidth()-50);
+        enemyShip.setRadius(5);
         return enemyShip;
     }
 
