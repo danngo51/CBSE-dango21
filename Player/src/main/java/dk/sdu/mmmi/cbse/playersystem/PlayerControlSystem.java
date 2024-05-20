@@ -55,7 +55,10 @@ public class PlayerControlSystem implements IEntityProcessingService {
             player.setY(gameData.getDisplayHeight()-1);
         }
 
-                                        
+        if (player.isHit()) {
+            world.removeEntity(player);
+        }
+
         }
     }
 

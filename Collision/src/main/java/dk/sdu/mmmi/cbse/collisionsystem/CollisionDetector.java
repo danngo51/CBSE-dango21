@@ -1,5 +1,7 @@
 package dk.sdu.mmmi.cbse.collisionsystem;
 
+import dk.sdu.mmmi.cbse.common.asteroid.Asteroid;
+import dk.sdu.mmmi.cbse.common.bullet.Bullet;
 import dk.sdu.mmmi.cbse.common.data.Entity;
 import dk.sdu.mmmi.cbse.common.data.GameData;
 import dk.sdu.mmmi.cbse.common.data.World;
@@ -19,9 +21,9 @@ public class CollisionDetector implements IPostEntityProcessingService {
                 }
                 // Checking if entities are colliding
                 if (isColliding(entity1, entity2)) {
+                   entity1.setHit(true);
+                   entity2.setHit(true);
                     // If they are colliding, we remove them
-                    world.removeEntity(entity1);
-                    world.removeEntity(entity2);
                 }
             }
         }

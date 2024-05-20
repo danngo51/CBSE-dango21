@@ -50,6 +50,10 @@ public class EnemyControlSystem implements IEntityProcessingService {
                     world.addEntity(spi.createBullet(enemy, gameData));
                 });
             }
+
+            if (enemy.isHit()) {
+                world.removeEntity(enemy);
+            }
         }
     }
 
