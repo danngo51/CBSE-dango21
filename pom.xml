@@ -20,8 +20,8 @@
         <module>CommonAsteroid</module>
         <module>Asteroid</module>
         <module>Collision</module>
-        <module>SplitPackage1</module>
-        <module>SplitPackage2</module>
+        <module>SplitPackageOne</module>
+        <module>SplitPackageTwo</module>
     </modules>
     <properties>
         <java>java</java>

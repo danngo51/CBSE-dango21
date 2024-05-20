@@ -7,6 +7,9 @@ import dk.sdu.mmmi.cbse.common.data.World;
 import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
 import dk.sdu.mmmi.cbse.common.services.IGamePluginService;
 import dk.sdu.mmmi.cbse.common.services.IPostEntityProcessingService;
+
+import java.lang.module.Configuration;
+import java.lang.module.ModuleReference;
 import java.util.Collection;
 import java.util.Map;
 import java.util.ServiceLoader;
@@ -38,37 +41,28 @@ public class Main extends Application {
 
     public static void main(String[] args) {
 
-        if (args.length < 1) {
-            System.err.println("Usage: java -p mods -m Core dk.sdu.mmmi.cbse.main.Main <path_to_modules>");
-            System.exit(1);
-        }
-
         String modulePath = args[0];
 
         // Load and use services from SplitPackage1
-        ModuleLayer layer1 = createLayer(modulePath, "SplitPackage1");
+        ModuleLayer layer1 = createLayer(modulePath, "SplitPackageOne");
         ServiceLoader<ISplitService> services1 = ServiceLoader.load(layer1, ISplitService.class);
         services1.stream()
                 .map(ServiceLoader.Provider::get)
                 .forEach(service -> System.out.println("From SplitPackage1: " + service.provide()));
 
         // Load and use services from SplitPackage2
-        ModuleLayer layer2 = createLayer(modulePath, "SplitPackage2");
+        ModuleLayer layer2 = createLayer(modulePath, "SplitPackageTwo");
         ServiceLoader<ISplitService> services2 = ServiceLoader.load(layer2, ISplitService.class);
         services2.stream()
                 .map(ServiceLoader.Provider::get)
-                .forEach(service -> System.out.println("From SplitPackage2: " + service.provide()));
-
-
-        launch(Main.class);
+                .forEach(ISplitService -> System.out.println("From SplitPackage2: " + ISplitService.provide()));
     }
 
 
-
-    private static ModuleLayer createLayer(String from, String module) {
-        var finder = ModuleFinder.of(Paths.get(from));
-        var parent = ModuleLayer.boot();
-        var cf = parent.configuration().resolve(finder, ModuleFinder.of(), Set.of(module));
+    private static ModuleLayer createLayer(String modulePath, String moduleName) {
+        ModuleFinder finder = ModuleFinder.of(Paths.get(modulePath));
+        ModuleLayer parent = ModuleLayer.boot();
+        Configuration cf = parent.configuration().resolve(finder, ModuleFinder.of(), Set.of(moduleName));
         return parent.defineModulesWithOneLoader(cf, ClassLoader.getSystemClassLoader());
     }
 
@@ -194,7 +188,4 @@ public class Main extends Application {
         return ServiceLoader.load(IPostEntityProcessingService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
     }
 
-    private Collection<? extends ISplitService> getSplitServices() {
-        return ServiceLoader.load(ISplitService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
-    }
 }
