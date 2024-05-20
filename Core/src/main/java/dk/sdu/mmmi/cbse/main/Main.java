@@ -10,9 +10,8 @@ import dk.sdu.mmmi.cbse.common.services.IPostEntityProcessingService;
 
 import java.lang.module.Configuration;
 import java.lang.module.ModuleReference;
-import java.util.Collection;
-import java.util.Map;
-import java.util.ServiceLoader;
+import java.nio.file.Path;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import static java.util.stream.Collectors.toList;
 
@@ -27,9 +26,9 @@ import javafx.stage.Stage;
 
 // For split package
 import java.lang.module.ModuleFinder;
-import dk.sdu.mmmi.cbse.common.services.ISplitService;
+import java.lang.module.ModuleDescriptor;
 import java.nio.file.Paths;
-import java.util.Set;
+import java.util.stream.Collectors;
 
 
 public class Main extends Application {
@@ -38,24 +37,37 @@ public class Main extends Application {
     private final World world = new World();
     private final Map<Entity, Polygon> polygons = new ConcurrentHashMap<>();
     private final Pane gameWindow = new Pane();
+    private static ModuleLayer layer;
 
     public static void main(String[] args) {
 
-        String modulePath = args[0];
+        Path pluginsDir = Paths.get("plugins"); // Directory with plugins JARs
 
-        // Load and use services from SplitPackage1
-        ModuleLayer layer1 = createLayer(modulePath, "SplitPackageOne");
-        ServiceLoader<ISplitService> services1 = ServiceLoader.load(layer1, ISplitService.class);
-        services1.stream()
-                .map(ServiceLoader.Provider::get)
-                .forEach(service -> System.out.println("From SplitPackage1: " + service.provide()));
+        // Search for plugins in the plugins directory
+        ModuleFinder pluginsFinder = ModuleFinder.of(pluginsDir);
 
-        // Load and use services from SplitPackage2
-        ModuleLayer layer2 = createLayer(modulePath, "SplitPackageTwo");
-        ServiceLoader<ISplitService> services2 = ServiceLoader.load(layer2, ISplitService.class);
-        services2.stream()
-                .map(ServiceLoader.Provider::get)
-                .forEach(ISplitService -> System.out.println("From SplitPackage2: " + ISplitService.provide()));
+        // Find all names of all found plugin modules
+        List<String> plugins = pluginsFinder
+                .findAll()
+                .stream()
+                .map(ModuleReference::descriptor)
+                .map(ModuleDescriptor::name)
+                .collect(Collectors.toList());
+
+        // Create configuration that will resolve plugin modules
+        // (verify that the graph of modules is correct)
+        Configuration pluginsConfiguration = ModuleLayer
+                .boot()
+                .configuration()
+                .resolve(pluginsFinder, ModuleFinder.of(), plugins);
+
+        // Create a module layer for plugins
+        layer = ModuleLayer
+                .boot()
+                .defineModulesWithOneLoader(pluginsConfiguration, ClassLoader.getSystemClassLoader());
+
+        // Launch the JavaFX application
+        launch(args);
     }
 
 
