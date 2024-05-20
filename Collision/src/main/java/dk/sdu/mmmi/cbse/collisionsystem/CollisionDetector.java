@@ -23,7 +23,6 @@ public class CollisionDetector implements IPostEntityProcessingService {
                 if (isColliding(entity1, entity2)) {
                    entity1.setHit(true);
                    entity2.setHit(true);
-                    // If they are colliding, we remove them
                 }
             }
         }

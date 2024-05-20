@@ -12,6 +12,7 @@ import java.util.Map;
 import java.util.ServiceLoader;
 import java.util.concurrent.ConcurrentHashMap;
 import static java.util.stream.Collectors.toList;
+
 import javafx.animation.AnimationTimer;
 import javafx.application.Application;
 import javafx.scene.Scene;
@@ -21,6 +22,13 @@ import javafx.scene.shape.Polygon;
 import javafx.scene.text.Text;
 import javafx.stage.Stage;
 
+// For split package
+import java.lang.module.ModuleFinder;
+import dk.sdu.mmmi.cbse.common.services.ISplitService;
+import java.nio.file.Paths;
+import java.util.Set;
+
+
 public class Main extends Application {
 
     private final GameData gameData = new GameData();
@@ -29,8 +37,41 @@ public class Main extends Application {
     private final Pane gameWindow = new Pane();
 
     public static void main(String[] args) {
+
+        if (args.length < 1) {
+            System.err.println("Usage: java -p mods -m Core dk.sdu.mmmi.cbse.main.Main <path_to_modules>");
+            System.exit(1);
+        }
+
+        String modulePath = args[0];
+
+        // Load and use services from SplitPackage1
+        ModuleLayer layer1 = createLayer(modulePath, "SplitPackage1");
+        ServiceLoader<ISplitService> services1 = ServiceLoader.load(layer1, ISplitService.class);
+        services1.stream()
+                .map(ServiceLoader.Provider::get)
+                .forEach(service -> System.out.println("From SplitPackage1: " + service.provide()));
+
+        // Load and use services from SplitPackage2
+        ModuleLayer layer2 = createLayer(modulePath, "SplitPackage2");
+        ServiceLoader<ISplitService> services2 = ServiceLoader.load(layer2, ISplitService.class);
+        services2.stream()
+                .map(ServiceLoader.Provider::get)
+                .forEach(service -> System.out.println("From SplitPackage2: " + service.provide()));
+
+
         launch(Main.class);
     }
+
+
+
+    private static ModuleLayer createLayer(String from, String module) {
+        var finder = ModuleFinder.of(Paths.get(from));
+        var parent = ModuleLayer.boot();
+        var cf = parent.configuration().resolve(finder, ModuleFinder.of(), Set.of(module));
+        return parent.defineModulesWithOneLoader(cf, ClassLoader.getSystemClassLoader());
+    }
+
 
     @Override
     public void start(Stage window) throws Exception {
@@ -153,5 +194,7 @@ public class Main extends Application {
         return ServiceLoader.load(IPostEntityProcessingService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
     }
 
-
+    private Collection<? extends ISplitService> getSplitServices() {
+        return ServiceLoader.load(ISplitService.class).stream().map(ServiceLoader.Provider::get).collect(toList());
+    }
 }
