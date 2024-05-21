@@ -11,6 +11,7 @@ public interface IPostEntityProcessingService {
 
     /**
      * Process.
+     * Pre-condition: Game data must be loaded and a world must be set.
      *
      * @param gameData the game data
      * @param world    the world

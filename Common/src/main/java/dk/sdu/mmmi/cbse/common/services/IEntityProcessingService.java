@@ -11,6 +11,8 @@ public interface IEntityProcessingService {
 
     /**
      * Process.
+     * Processes the game data and world
+     * Pre-condition: Game data must be loaded and a world must be set.
      *
      * @param gameData the game data
      * @param world    the world

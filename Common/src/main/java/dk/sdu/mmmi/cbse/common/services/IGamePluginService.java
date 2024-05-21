@@ -10,7 +10,7 @@ public interface IGamePluginService {
 
 
     /**
-     * Start.
+     * Start. Sets the world and game data
      *
      * @param gameData the game data
      * @param world    the world
