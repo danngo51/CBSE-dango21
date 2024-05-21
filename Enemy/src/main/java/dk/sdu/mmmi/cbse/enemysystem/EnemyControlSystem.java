@@ -3,6 +3,7 @@ package dk.sdu.mmmi.cbse.enemysystem;
 import dk.sdu.mmmi.cbse.common.data.Entity;
 import dk.sdu.mmmi.cbse.common.data.GameData;
 import dk.sdu.mmmi.cbse.common.data.World;
+import dk.sdu.mmmi.cbse.common.data.entityParts.LifePart;
 import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
 import dk.sdu.mmmi.cbse.common.bullet.BulletSPI;
 
@@ -51,7 +52,9 @@ public class EnemyControlSystem implements IEntityProcessingService {
                 });
             }
 
-            if (enemy.isHit()) {
+            LifePart lifePart = enemy.getPart(LifePart.class);
+
+            if(lifePart.getLife() <= 0){
                 world.removeEntity(enemy);
             }
         }

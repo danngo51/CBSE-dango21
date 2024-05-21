@@ -3,6 +3,7 @@ package dk.sdu.mmmi.cbse.enemysystem;
 import dk.sdu.mmmi.cbse.common.data.Entity;
 import dk.sdu.mmmi.cbse.common.data.GameData;
 import dk.sdu.mmmi.cbse.common.data.World;
+import dk.sdu.mmmi.cbse.common.data.entityParts.LifePart;
 import dk.sdu.mmmi.cbse.common.services.IGamePluginService;
 
 import java.lang.reflect.GenericArrayType;
@@ -29,6 +30,7 @@ public class EnemyPlugin implements IGamePluginService {
         enemyShip.setX(gameData.getDisplayHeight()-50);
         enemyShip.setY(gameData.getDisplayWidth()-50);
         enemyShip.setRadius(5);
+        enemyShip.add(new LifePart(5));
         return enemyShip;
     }
 

@@ -5,6 +5,7 @@ import dk.sdu.mmmi.cbse.common.bullet.Bullet;
 import dk.sdu.mmmi.cbse.common.data.Entity;
 import dk.sdu.mmmi.cbse.common.data.GameData;
 import dk.sdu.mmmi.cbse.common.data.World;
+import dk.sdu.mmmi.cbse.common.data.entityParts.LifePart;
 import dk.sdu.mmmi.cbse.common.services.IPostEntityProcessingService;
 
 public class CollisionDetector implements IPostEntityProcessingService {
@@ -21,8 +22,10 @@ public class CollisionDetector implements IPostEntityProcessingService {
                 }
                 // Checking if entities are colliding
                 if (isColliding(entity1, entity2)) {
-                   entity1.setHit(true);
-                   entity2.setHit(true);
+                    LifePart lifePart1 = entity1.getPart(LifePart.class);
+                    LifePart lifePart2 = entity2.getPart(LifePart.class);
+                    lifePart1.setLife(lifePart1.getLife() - 1);
+                    lifePart2.setLife(lifePart2.getLife() - 1);
                 }
             }
         }

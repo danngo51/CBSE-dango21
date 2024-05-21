@@ -1,7 +1,11 @@
 package dk.sdu.mmmi.cbse.common.data;
 
+import dk.sdu.mmmi.cbse.common.data.entityParts.EntityPart;
+
 import java.io.Serializable;
+import java.util.Map;
 import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Entity implements Serializable {
 
@@ -12,8 +16,25 @@ public class Entity implements Serializable {
     private double y;
     private double rotation;
     private double radius;
-    private boolean isHit = false;
-            
+
+    private Map<Class, EntityPart> parts;
+
+    public void add(EntityPart part) {
+        parts.put(part.getClass(), part);
+    }
+
+    public void remove(Class partClass) {
+        parts.remove(partClass);
+    }
+
+    public <E extends EntityPart> E getPart(Class partClass) {
+        return (E) parts.get(partClass);
+    }
+
+    public Entity() {
+        parts = new ConcurrentHashMap<>();
+    }
+
 
     public String getID() {
         return ID.toString();
@@ -62,11 +83,6 @@ public class Entity implements Serializable {
         this.radius = radius;
     }
 
-    public boolean isHit() {
-        return isHit;
-    }
-
-    public void setHit(boolean hit) {
-        isHit = hit;
+    public void setIsHit(boolean b) {
     }
 }

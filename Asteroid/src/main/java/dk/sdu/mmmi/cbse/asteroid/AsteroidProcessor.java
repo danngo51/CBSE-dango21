@@ -5,6 +5,7 @@ import dk.sdu.mmmi.cbse.common.asteroid.IAsteroidSplitter;
 import dk.sdu.mmmi.cbse.common.data.Entity;
 import dk.sdu.mmmi.cbse.common.data.GameData;
 import dk.sdu.mmmi.cbse.common.data.World;
+import dk.sdu.mmmi.cbse.common.data.entityParts.LifePart;
 import dk.sdu.mmmi.cbse.common.services.IEntityProcessingService;
 
 public class AsteroidProcessor implements IEntityProcessingService {
@@ -35,9 +36,14 @@ public class AsteroidProcessor implements IEntityProcessingService {
                 asteroid.setY(asteroid.getY() % gameData.getDisplayHeight());
             }
 
-            if (asteroid.isHit()) {
+
+            LifePart lifePart = asteroid.getPart(LifePart.class);
+            lifePart.process(gameData, asteroid);
+
+            if (lifePart.getLife()<=0){
                 asteroidSplitter.createSplitAsteroid(asteroid, world);
                 world.removeEntity(asteroid);
+
             }
 
         }
