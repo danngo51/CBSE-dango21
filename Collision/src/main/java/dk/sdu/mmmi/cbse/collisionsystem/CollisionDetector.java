@@ -1,7 +1,5 @@
 package dk.sdu.mmmi.cbse.collisionsystem;
 
-import dk.sdu.mmmi.cbse.common.asteroid.Asteroid;
-import dk.sdu.mmmi.cbse.common.bullet.Bullet;
 import dk.sdu.mmmi.cbse.common.data.Entity;
 import dk.sdu.mmmi.cbse.common.data.GameData;
 import dk.sdu.mmmi.cbse.common.data.World;
@@ -14,9 +12,11 @@ public class CollisionDetector implements IPostEntityProcessingService {
     }
     @Override
     public void process(GameData gameData, World world) {
-        // Getting entities
-        for (Entity entity1 : world.getEntities()) {
-            for (Entity entity2 : world.getEntities()) {
+        Entity[] entities = world.getEntities().toArray(new Entity[0]);
+        for (int i = 0; i < entities.length; i++) {
+            for (int j = i + 1; j < entities.length; j++) {
+                Entity entity1 = entities[i];
+                Entity entity2 = entities[j];
                 if (entity1.getID().equals(entity2.getID())) {
                     continue;
                 }
