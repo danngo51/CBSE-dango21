@@ -48,16 +48,6 @@
             <artifactId>CommonBullet</artifactId>
             <version>1.0.1-SNAPSHOT</version>
         </dependency>
-        <dependency>
-            <groupId>dk.sdu.mmmi.cbse</groupId>
-            <artifactId>SplitPackageOne</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
-        </dependency>
-        <dependency>
-            <groupId>dk.sdu.mmmi.cbse</groupId>
-            <artifactId>SplitPackageTwo</artifactId>
-            <version>1.0.1-SNAPSHOT</version>
-        </dependency>
     </dependencies>
     <build>
               <plugins>
